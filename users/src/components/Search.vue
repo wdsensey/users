@@ -27,14 +27,14 @@
             searchUser() {
                 this.allData.filter((elem) => {
                     if (elem.first_name === this.searchRequest) {
-                        this.searchableUser = elem
+                        this.searchableUser = elem;
                     }
-                });
-                this.$emit('searchUser', this.searchableUser)
+                })
+                this.$emit('searchUser', this.searchableUser);
             },
             clearUser() {
-                this.searchableUser = null
-                this.$emit('searchUser', null)
+                this.searchableUser = null;
+                this.$emit('searchUser', null);
             }
         }
     }

@@ -33,7 +33,8 @@
             </div>
             <template v-else>
                 <div class="row">
-                    <router-link :to="{ name: 'UserDetails', params: { id: item.id }}" class="col-6" v-for="item in data" :key="item.id">
+                    <router-link :to="{ name: 'UserDetails', params: { id: item.id } }" class="col-6"
+                                 v-for="item in data" :key="item.id" @click="emitUserDetails(item.id)">
                         <div class="card">
                             <div class="row align-items-center">
                                 <div class="col-4">
@@ -49,11 +50,12 @@
                 </div>
                 <div class="pagination">
                     <button class="btn btn-outline-secondary" :disabled="currentPage === 0" @click="currentPage--">
-                        Назад
+                        prev
                     </button>
                     <button class="btn btn-outline-secondary">{{ currentPage + 1 }}</button>
-                    <button class="btn btn-outline-secondary" :disabled="currentPage === totalPages" @click="currentPage++">
-                        Вперед
+                    <button class="btn btn-outline-secondary" :disabled="currentPage === totalPages"
+                            @click="currentPage++">
+                        next
                     </button>
                 </div>
             </template>
@@ -103,7 +105,10 @@
                 this.currentPage = 0;
             },
             searchUser(data) {
-                this.searchableUser = data
+                this.searchableUser = data;
+            },
+            emitUserDetails(id) {
+                this.$emit('emitUserDetails', id);
             }
         },
         created() {
@@ -134,6 +139,7 @@
 
     .card {
         margin-bottom: 15px;
+        cursor: pointer;
     }
 
     p {
