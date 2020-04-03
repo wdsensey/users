@@ -18,7 +18,7 @@
             </div>
             <div class="row">
                 <router-link :to="{ name: 'UserDetails', params: { id: item.id } }" class="col-6"
-                             v-for="item in currentPageData" :key="item.id" @click="emitUserDetails(item.id)">
+                             v-for="item in currentPageData" :key="item.id">
                     <div class="card">
                         <div class="row align-items-center">
                             <div class="col-4">
@@ -89,9 +89,6 @@
             },
             search(query) {
                 this.searchQuery = query;
-            },
-            emitUserDetails(id) {
-                this.$emit('emitUserDetails', id);
             }
         },
         created() {
