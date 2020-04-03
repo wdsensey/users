@@ -1,11 +1,7 @@
 <template>
-    <div class="input-group">
+    <div class="form-group">
         <input type="text" v-model="searchRequest" class="form-control"
-               placeholder="Введите Имя для поиска">
-        <div class="input-group-append">
-            <button class="btn btn-primary" v-if="searchableUser" @click="clearUser">Очистить</button>
-            <button class="btn btn-primary" v-else @click="searchUser">Поиск</button>
-        </div>
+               placeholder="Введите Имя для поиска" @input="search">
     </div>
 </template>
 
@@ -24,17 +20,8 @@
             }
         },
         methods: {
-            searchUser() {
-                this.allData.filter((elem) => {
-                    if (elem.first_name === this.searchRequest) {
-                        this.searchableUser = elem;
-                    }
-                })
-                this.$emit('searchUser', this.searchableUser);
-            },
-            clearUser() {
-                this.searchableUser = null;
-                this.$emit('searchUser', null);
+            search() {
+                this.$emit('search', this.searchRequest);
             }
         }
     }

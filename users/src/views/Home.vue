@@ -13,52 +13,35 @@
                     </div>
                 </div>
                 <div class="col-6">
-                    <Search :allData="allData" @searchUser="searchUser" />
+                    <Search :allData="allData" @search="search" />
                 </div>
             </div>
-            <div class="row" v-if="searchableUser">
-                <router-link :to="{ name: 'UserDetails', params: { id: searchableUser.id }}" class="col-12">
+            <div class="row">
+                <router-link :to="{ name: 'UserDetails', params: { id: item.id } }" class="col-6"
+                             v-for="item in currentPageData" :key="item.id" @click="emitUserDetails(item.id)">
                     <div class="card">
                         <div class="row align-items-center">
                             <div class="col-4">
-                                <img :src="searchableUser.avatar" alt="" class="img-fluid w-100">
+                                <img :src="item.avatar" alt="" class="img-fluid w-100">
                             </div>
                             <div class="col-8">
-                                <p>{{ searchableUser.first_name }}</p>
-                                <p>{{ searchableUser.email }}</p>
+                                <p>{{ item.first_name }}</p>
+                                <p>{{ item.email }}</p>
                             </div>
                         </div>
                     </div>
                 </router-link>
             </div>
-            <template v-else>
-                <div class="row">
-                    <router-link :to="{ name: 'UserDetails', params: { id: item.id } }" class="col-6"
-                                 v-for="item in data" :key="item.id" @click="emitUserDetails(item.id)">
-                        <div class="card">
-                            <div class="row align-items-center">
-                                <div class="col-4">
-                                    <img :src="item.avatar" alt="" class="img-fluid w-100">
-                                </div>
-                                <div class="col-8">
-                                    <p>{{ item.first_name }}</p>
-                                    <p>{{ item.email }}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </router-link>
-                </div>
-                <div class="pagination">
-                    <button class="btn btn-outline-secondary" :disabled="currentPage === 0" @click="currentPage--">
-                        prev
-                    </button>
-                    <button class="btn btn-outline-secondary">{{ currentPage + 1 }}</button>
-                    <button class="btn btn-outline-secondary" :disabled="currentPage === totalPages"
-                            @click="currentPage++">
-                        next
-                    </button>
-                </div>
-            </template>
+            <div class="pagination">
+                <button class="btn btn-outline-secondary" :disabled="currentPage === 0" @click="currentPage--">
+                    prev
+                </button>
+                <button class="btn btn-outline-secondary">{{ currentPage + 1 }}</button>
+                <button class="btn btn-outline-secondary" :disabled="currentPage === totalPages"
+                        @click="currentPage++">
+                    next
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -76,7 +59,7 @@
                 allData: [],
                 currentPage: 0,
                 perPage: 5,
-                searchableUser: null
+                searchQuery: ''
             }
         },
         methods: {
@@ -104,8 +87,8 @@
             resetPage() {
                 this.currentPage = 0;
             },
-            searchUser(data) {
-                this.searchableUser = data;
+            search(query) {
+                this.searchQuery = query;
             },
             emitUserDetails(id) {
                 this.$emit('emitUserDetails', id);
@@ -116,11 +99,16 @@
             this.getData();
         },
         computed: {
-            data() {
-                return this.allData.slice(this.currentPage * this.perPage, (this.currentPage + 1) * this.perPage);
+            filteredData() {
+                return this.allData.filter((item) => {
+                    return item.first_name.includes(this.searchQuery);
+                });
+            },
+            currentPageData() {
+                return this.filteredData.slice(this.currentPage * this.perPage, (this.currentPage + 1) * this.perPage);
             },
             totalPages() {
-                return Math.floor(this.allData.length / this.perPage);
+                return Math.floor(this.filteredData.length / this.perPage);
             }
         },
     }
